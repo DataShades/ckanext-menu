@@ -1,0 +1,14 @@
+# menu-js:
+#   filter: rjsmin
+#   output: ckanext-menu/%(version)s-menu.js
+#   contents:
+#     - js/menu.js
+#   extra:
+#     preload:
+#       - base/main
+
+# menu-css:
+#   filter: cssrewrite
+#   output: ckanext-menu/%(version)s-menu.css
+#   contents:
+#     - css/menu.css
