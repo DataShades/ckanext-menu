@@ -1,0 +1,42 @@
+{% extends "menu/page.html" %}
+
+{% block subtitle %}
+    {{ menu.title }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+    {{ super() }}
+    <li><a href="{{ h.url_for('menu.read' ,id=id) }}">{{ menu.title }}</a></li>
+{% endblock %}
+
+{%- block content %}
+    {% block maintag %}<div class="main">{% endblock %}
+    <div id="content" class="menu-{{ menu.id }} menu-type-{{ menu.type }} container">
+        {% block main_content %}
+            {% block flash %}{{ super() }}{% endblock %}
+            {% block toolbar %}{{ super() }}{% endblock %}
+        
+            <div class="menu-wrapper">
+                {% block primary %}
+                    <div class="module-content">
+                        <div class="d-flex justify-content-end">
+                            <a class="btn btn-outline-primary me-2" href="{{ h.url_for('menu.list') }}">
+                                {{ _("Back") }}
+                            </a>
+                            <a class="btn btn-primary" href="{{ h.url_for('menu.edit', id=id) }}">
+                                {{ _("Edit") }}
+                            </a>
+                        </div>
+                        <h1 class="mb4">
+                            {{ menu.title }}
+                        </h1>
+                        <div class="border rounded p-3">
+                            11
+                        </div>
+                    </div>
+                {% endblock %}
+            </div>
+        {% endblock %}
+        </div>
+    </div>
+{% endblock -%}

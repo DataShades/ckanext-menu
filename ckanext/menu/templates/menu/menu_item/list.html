@@ -1,0 +1,89 @@
+{% extends "menu/page.html" %}
+
+{% block title %}
+    {{ _("Menu Items List") }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+    {{ super() }}
+    <li><a href="{{ h.url_for('menu.list') }}">{{ _("Menu List") }}</a></li>
+    <li><a href="{{ h.url_for('menu_item.list', mid=mid) }}">{{ _("Menu Items List") }}</a></li>
+{% endblock %}
+
+{%- block content %}
+    {% block maintag %}<div class="main">{% endblock %}
+    <div id="content" class="container">
+        {% block main_content %}
+            {% block flash %}{{ super() }}{% endblock %}
+            {% block toolbar %}{{ super() }}{% endblock %}
+        
+            <div class="menu-wrapper">
+                {% block primary %}
+                    <div class="module-content">
+                        <h1 class="mb4">
+                            {{ menu.title }}
+                        </h1>
+                        <div class="d-flex justify-content-end mb-4">
+                            <a class="btn btn-secondary me-2" href="{{ h.url_for('menu.list') }}">
+                                {{ _("Back") }}
+                            </a>
+                            <a type="button" class="btn btn-primary me-2" href="{{ h.url_for('menu_item.create', mid=menu.id) }}">
+                                {{ _("Add menu item") }}
+                            </a>
+                        </div>
+                        <div class="">
+                            {% macro render_item(item) %}
+                                <li data-id="{{ item.id }}">
+                                    <div class="border rounded p-3 mb-2 d-flex align-items-center">
+                                        <i class="fas fa-arrows-alt drag-handle me-3"></i>
+                                        <div class="d-flex justify-content-between align-items-center w-100">
+                                            <div>
+                                                {{ item.title }}
+                                            </div>
+                                            <div>
+                                                <a class="btn btn-outline-primary btn-cell-edit me-2" href="{{ h.url_for('menu_item.edit', mid=menu.id, id=item.id) }}">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                                <a class="btn btn-outline-danger btn-delete" href="{{ h.url_for('menu_item.delete', mid=menu.id, id=item.id) }}">
+                                                    <i class="fa fa-trash"></i>
+                                                </a> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul>
+                                        {% if item.children %}
+                                            {% for child in item.children %}
+                                                {{ render_item(child) }}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </ul>
+                                </li>
+                            {% endmacro %}
+                            <div class="menu-list-admin">
+                                <ul id="menu-order" data-module="menu-sortable-menu-items">
+                                {% for item in tree %}
+                                    {{ render_item(item) }}
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% if tree and tree|length > 1 %}
+                            <div>
+                                <button class="btn btn-primary" id="store-menu-order">
+                                    {{ _('Save order') }}
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endblock %}
+            </div>
+        {% endblock %}
+        </div>
+    </div>
+
+{% endblock -%}
+
+{%- block scripts %}
+    {{ super() }}
+    {% asset 'menu/menu-admin-js' %}
+{% endblock -%}

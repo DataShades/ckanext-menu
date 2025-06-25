@@ -1,0 +1,53 @@
+{% extends "menu/page.html" %}
+
+{% import 'macros/form.html' as form %}
+
+{% block title %}
+    {{ _("Create Menu Item") }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+    {{ super() }}
+    <li><a href="{{ h.url_for('menu_item.create', mid=mid) }}">{{ _("Create Menu Item") }}</a></li>
+{% endblock %}
+
+{%- block content %}
+    {% block maintag %}<div class="main">{% endblock %}
+        <div id="content" class="container">
+            {% block main_content %}
+                {% block flash %}{{ super() }}{% endblock %}
+                {% block toolbar %}{{ super() }}{% endblock %}
+                <div class="menu-wrapper">
+                    {% block primary %}
+                        <div class="module-content">
+                            {% block menu_actions %}
+                            {% endblock %}
+                            <form action="" method="post">
+                                {{ form.input("title", label=_("Title"), value=form_data.title, classes=["control-medium"], attrs={'class': 'form-control', 'required': 'true'}, is_required=True) }}
+    
+                                {{ form.input("url", label=_("URL"), value=form_data.url, classes=["control-medium"], attrs={'class': 'form-control', 'required': 'true'}, is_required=True) }}
+
+                                {{ form.input("order", label=_("Position"), type="number", value=form_data.order, classes=["control-medium"], attrs={'min': '0', 'max': '100', 'step': '1', 'required': 'true'}, is_required=True) }}
+
+                                {{ form.select(
+                                    'pid',
+                                    label=_('Parent'),
+                                    options=pid_options,
+                                    selected=form_data.pid,
+                                    error='')
+                                }}
+
+                                {{ form.input("classes", label=_("Classes"), value=form_data.classes, classes=["control-medium"]) }}
+
+                                {% block save %}
+                                    <button class="btn btn-primary" type="submit">{{ _('Create') }}</button>
+                                {% endblock %}
+                            </form>
+                        </div>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+{% endblock -%}
+

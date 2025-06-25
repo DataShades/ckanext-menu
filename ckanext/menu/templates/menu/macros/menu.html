@@ -1,0 +1,75 @@
+{% macro default_render_links(item, with_children=True) %}
+    <li>
+        <a class="{{ item.classes }}" href="{{ item.url }}">
+            {{ item.title }}
+        </a>
+        {% if with_children and item.children %}
+            <ul>
+                {% for child in item.children %}
+                    {{ default_render_links(child) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+{% macro dropdown_render_links(item) %}
+    {% if item.children %}
+        <li class="dropdown">
+            <a class="{{ item.classes }} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ item.title }}
+            </a>
+            <ul class="dropdown-menu">
+                {% for child in item.children %}
+                    {{ default_render_links(child) }}
+                {% endfor %}
+            </ul>
+        </li>
+    {% else %}
+        <li>
+            <a class="{{ item.classes }}" href="{{ item.url }}">
+                {{ item.title }}
+            </a>
+        </li>
+    {% endif %}
+{% endmacro %}
+
+
+{% macro default_menu_tree(tree) %}
+    <ul>
+        {% for item in tree %}
+            {{ default_render_links(item) }}
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+
+{% macro main_nav_menu_tree(tree) %}
+    {#
+        Render without first 'ul', as the header.html template has the block inside the 'ul' element.
+
+    #}
+    {% for item in tree %}
+        {{ default_render_links(item, with_children=False) }}
+    {% endfor %}
+{% endmacro %}
+
+
+{% macro main_nav_dropdown_menu_tree(tree) %}
+    {#
+        Render without first 'ul', as the header.html template has the block inside the 'ul' element.
+
+    #}
+    {% for item in tree %}
+        {{ dropdown_render_links(item) }}
+    {% endfor %}
+{% endmacro %}
+
+
+{% macro footer_menu_tree(tree) %}
+    <ul class="list-unstyled">
+        {% for item in tree %}
+            {{ default_render_links(item) }}
+        {% endfor %}
+    </ul>
+{% endmacro %}

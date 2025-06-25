@@ -1,0 +1,29 @@
+{% extends 'menu/create.html' %}
+
+{% block save %}
+    <a class="btn btn-secondary" href="{{ h.url_for('menu.list') }}">{{ _('Cancel') }}</a>
+    <button class="btn btn-primary" type="submit">{{ _('Update') }}</button>
+{% endblock %}
+
+{% block title %}
+    {{ _("Update Menu") }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+    {{ super() }}
+    <li><a href="{{ h.url_for('menu.edit', id=id) }}">{{ _("Update Menu") }}</a></li>
+{% endblock %}
+
+{% block menu_actions %}
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-outline-primary me-2" href="{{ h.url_for('menu.list') }}">
+            {{ _("Back") }}
+        </a>
+        <a class="btn btn-primary me-2" href="{{ h.url_for('menu.read', id=id) }}">
+            {{ _("View") }}
+        </a>
+        <a class="btn btn-danger" href="{{ h.url_for('menu.delete', id=id) }}">
+            {{ _("Delete") }}
+        </a>
+    </div>
+{% endblock %}

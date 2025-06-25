@@ -1,0 +1,13 @@
+{% ckan_extends %}
+
+{% block header_account_logged %}
+    {% if g.userobj.sysadmin %}
+        <li>
+            <a class="" href="{{ h.url_for('menu.list') }}">
+                <i class="far fa-compass" aria-hidden="true"></i>
+            </a>
+        </li>
+    {% endif %}
+
+    {{ super() }}
+{% endblock %}

@@ -1,0 +1,21 @@
+:root {
+    --white-color: #fff
+}
+
+.menu-wrapper {
+    background-color: var(--white-color);
+    min-height: 300px;
+    position: relative;
+}
+
+.menu-list-admin {
+    ul {
+        list-style: none;
+    }
+    & > ul {
+        padding: 0;
+    }
+    .drag-handle {
+        cursor: grab;
+    }
+}

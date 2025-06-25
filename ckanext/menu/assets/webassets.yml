@@ -7,8 +7,20 @@
 #     preload:
 #       - base/main
 
-# menu-css:
-#   filter: cssrewrite
-#   output: ckanext-menu/%(version)s-menu.css
-#   contents:
-#     - css/menu.css
+menu-css:
+  filter: cssrewrite
+  output: ckanext-menu/%(version)s-menu.css
+  contents:
+    - css/styles.css
+
+
+menu-admin-js:
+  filter: rjsmin
+  output: ckanext-content/%(version)s-menu-admin.js
+  contents:
+    - js/vendor/Sortable.min.js
+
+    - js/menu-sortable-menu-items.js
+  extra:
+    preload:
+      - base/main
