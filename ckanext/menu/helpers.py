@@ -6,7 +6,7 @@ from ckanext.menu.model.menu import CKANMenuItemModel, CKANMenuModel
 import ckanext.menu.utils as menu_utils
 
 
-def build_menu_tree(menu_name, snippet=None, max_level=0):
+def build_menu_tree(menu_name, snippet=None):
     menu = CKANMenuModel.get_by_name(menu_name)
 
     if menu:

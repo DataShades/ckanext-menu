@@ -23,9 +23,9 @@
                             {% block menu_actions %}
                             {% endblock %}
                             <form action="" method="post">
-                                {{ form.input("title", label=_("Title"), value=form_data.title, classes=["control-medium"], is_required=True) }}
+                                {{ form.input("title", label=_("Title"), placeholder="My Custom Menu",value=form_data.title, classes=["control-medium"], is_required=True, attrs={'class': 'form-control', 'required': 'true'}) }}
     
-                                {{ form.input("name", label=_("Name"), value=form_data.name, classes=["control-medium"], is_required=True) }}
+                                {{ form.input("name", label=_("Name"), placeholder="lowercase text separeted by -_",value=form_data.name, classes=["control-medium"], is_required=True, attrs={'class': 'form-control', 'required': 'true'}) }}
 
                                 {% block save %}
                                     <button class="btn btn-primary" type="submit">{{ _('Create') }}</button>

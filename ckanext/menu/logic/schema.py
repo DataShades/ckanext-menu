@@ -41,6 +41,7 @@ def menu_item_create(
         "order": [default(0), int_validator],
         "pid": [ignore_empty, unicode_safe, pid_menu_item_exist],
         "classes": [ignore_empty, unicode_safe],
+        "attributes": [ignore_empty, unicode_safe],
         "mid": [not_empty, unicode_safe, menu_exist],
         "__extras": [ignore],
     }
@@ -84,6 +85,7 @@ def menu_item_edit(
         "order": [default(0), int_validator],
         "pid": [ignore_empty, unicode_safe, pid_menu_item_exist],
         "classes": [ignore_empty, unicode_safe],
+        "attributes": [ignore_empty, unicode_safe],
         "mid": [not_empty, unicode_safe, menu_exist],
         "__extras": [ignore],
     }

@@ -1,0 +1,24 @@
+site_name: ckanext-menu
+site_url: https://datashades.github.io/ckanext-menu/
+
+repo_url:  https://github.com/DataShades/ckanext-menu
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Usage: usage.md
+
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

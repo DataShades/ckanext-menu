@@ -8,6 +8,7 @@ class MenuItem(TypedDict):
     order: int
     pid: str | None
     classes: str | None
+    attributes: str | None
     mid: str
 
 

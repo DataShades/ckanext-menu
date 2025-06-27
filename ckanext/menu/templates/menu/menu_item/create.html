@@ -37,7 +37,8 @@
                                     error='')
                                 }}
 
-                                {{ form.input("classes", label=_("Classes"), value=form_data.classes, classes=["control-medium"]) }}
+                                {{ form.input("classes", label=_("Classes"), placeholder="class1 class2", value=form_data.classes, classes=["control-medium"]) }}
+                                {{ form.input("attributes", label=_("Attributes"), placeholder="{'key': 'value'}", value=form_data.attributes, classes=["control-medium"]) }}
 
                                 {% block save %}
                                     <button class="btn btn-primary" type="submit">{{ _('Create') }}</button>

@@ -24,6 +24,12 @@ Homepage = "https://github.com/Datashades/ckanext-menu"
 [project.entry-points."ckan.plugins"]
 menu = "ckanext.menu.plugin:MenuPlugin"
 
+[project.optional-dependencies]
+docs = [
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocstrings[python]"
+]
 
 [build-system]
 requires = ["setuptools"]

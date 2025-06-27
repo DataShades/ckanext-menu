@@ -75,7 +75,8 @@ class CKANMenuItemModel(tk.BaseModel):
     url = sa.Column(sa.String, nullable=False)
     order = sa.Column(sa.Integer, nullable=False, default=0)
     pid = sa.Column(sa.Text, nullable=True)
-    classes = sa.Column("classes", sa.String, nullable=True)
+    classes = sa.Column(sa.String, nullable=True)
+    attributes = sa.Column(sa.String, nullable=True)
     mid = sa.Column(sa.Integer, sa.ForeignKey("menu.id"), nullable=False)
 
     menu = relationship("CKANMenuModel", back_populates="items")
@@ -123,5 +124,6 @@ class CKANMenuItemModel(tk.BaseModel):
             order=int(self.order),  # type: ignore
             pid=str(self.pid) if self.pid else None,
             classes=str(self.classes) if self.classes else None,
+            attributes=str(self.attributes) if self.attributes else None,
             mid=str(self.mid),
         )
