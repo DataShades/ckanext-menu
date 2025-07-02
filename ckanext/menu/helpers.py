@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from markupsafe import Markup
 
 import ckan.plugins.toolkit as tk
