@@ -241,9 +241,8 @@ class ListView(MethodView):
         return tk.render("menu/list.html", extra_vars=extra_vars)
 
 
-menu.add_url_rule("/menu/<id>", view_func=ReadView.as_view("read"))
-
+menu.add_url_rule("/menu/list", view_func=ListView.as_view("list"))
 menu.add_url_rule("/menu/create", view_func=CreateView.as_view("create"))
 menu.add_url_rule("/menu/edit/<id>", view_func=EditView.as_view("edit"))
 menu.add_url_rule("/menu/delete/<id>", view_func=DeleteView.as_view("delete"))
-menu.add_url_rule("/menu/list", view_func=ListView.as_view("list"))
+menu.add_url_rule("/menu/<id>", view_func=ReadView.as_view("read"))
