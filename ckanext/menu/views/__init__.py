@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .menu import menu
 from .menu_item import menu_item
 
