@@ -48,7 +48,9 @@ To temporary patch the CKAN configuration for the duration of a test you can use
         pass
 """
 
-import ckanext.menu.plugin as plugin
+import pytest
+
+from ckan.plugins import plugin_loaded
 
 
 @pytest.mark.ckan_config("ckan.plugins", "menu")
