@@ -25,7 +25,17 @@
                             <form action="" method="post">
                                 {{ form.input("title", label=_("Title"), placeholder="My Custom Menu",value=form_data.title, classes=["control-medium"], is_required=True, attrs={'class': 'form-control', 'required': 'true'}) }}
     
-                                {{ form.input("name", label=_("Name"), placeholder="lowercase text separeted by -_",value=form_data.name, classes=["control-medium"], is_required=True, attrs={'class': 'form-control', 'required': 'true'}) }}
+                                {% call form.input("name", label=_("Name"), placeholder="lowercase text separeted by -_",value=form_data.name, classes=[], is_required=True, attrs={'class': 'form-control', 'required': 'true'}) %}
+
+                                    {% set text = "An <strong>unique</strong> menu identifier that will be used in the helpers while calling the specific menu." %}
+                                    
+                                    {{- form.info(
+                                            text=text|safe,
+                                            inline=True,
+                                            classes=['mt-1']
+                                            ) -}}
+
+                                {% endcall %}
 
                                 {% block save %}
                                     <button class="btn btn-primary" type="submit">{{ _('Create') }}</button>

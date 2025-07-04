@@ -2,9 +2,15 @@
 
 {% macro default_render_links(item, with_children=True) %}
     <li class="{% if item.active %} active {% endif %}">
-        <a class="{{ item.classes }}" href="{{ item.url }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
-            {{ item.title }}
-        </a>
+        {% if not item.url == "<no_link>" %}
+            <a class="{% if item.classes %}{{ item.classes }}{% endif %}" href="{{ item.url }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
+                {{ item.title }}
+            </a>
+        {% else %}
+            <span class="{% if item.classes %}{{ item.classes }}{% endif %}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
+                {{ item.title }}
+            </span>
+        {% endif %}
         {% if with_children and item.children %}
             <ul>
                 {% for child in item.children %}
@@ -18,7 +24,7 @@
 {% macro dropdown_render_links(item) %}
     {% if item.children %}
         <li class="dropdown {% if item.active %} active {% endif %}">
-            <a class="{{ item.classes }} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="{% if item.classes %}{{ item.classes }}{% endif %} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {{ item.title }}
             </a>
             <ul class="dropdown-menu">
@@ -29,9 +35,15 @@
         </li>
     {% else %}
         <li class="{% if item.active %} active {% endif %}">
-            <a class="{{ item.classes }}" href="{{ item.url }}">
-                {{ item.title }}
-            </a>
+            {% if not item.url == "<no_link>" %}
+                <a class="{% if item.classes %}{{ item.classes }}{% endif %}" href="{{ item.url }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
+                    {{ item.title }}
+                </a>
+            {% else %}
+                <span class="{% if item.classes %}{{ item.classes }}{% endif %}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
+                    {{ item.title }}
+                </span>
+            {% endif %}
         </li>
     {% endif %}
 {% endmacro %}

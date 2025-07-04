@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 from urllib.parse import ParseResult, urlparse
 import re
+import json
 
 import ckan.plugins.toolkit as tk
 import ckan.types as types
@@ -122,6 +123,8 @@ def menu_is_valid_url(
                 errors[key].append("Not a valid URL.")
         except Exception:
             errors[key].append("Not a valid URL.")
+    elif value == "<no_link>":
+        return
     else:
         if not value.startswith("/") or value.startswith("//"):
             errors[key].append(
@@ -136,4 +139,21 @@ def menu_is_valid_url(
         if value.endswith("/"):
             errors[key].append('Should not end with "/".')
 
+    return
+
+
+def menu_valid_json(
+    key: types.FlattenKey,
+    data: types.FlattenDataDict,
+    errors: types.FlattenErrorDict,
+    context: types.Context,
+) -> Any:
+    val = data.get(key)
+    print(val)
+    if val:
+        try:
+            json.loads(val)
+        except json.JSONDecodeError:
+            print(2)
+            errors[key].append("Not a valid JSON.")
     return

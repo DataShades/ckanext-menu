@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import json
+import logging
 from urllib.parse import urlparse
 
 import ckan.plugins.toolkit as tk
+
+log = logging.getLogger(__name__)
 
 
 def menu_build_ordered_tree(objects):
@@ -42,12 +45,11 @@ def menu_build_ordered_tree(objects):
                     m_item["classes"] = (m_item.get("classes") or "") + " active"
             if m_item.get("attributes"):
                 attributes = m_item.get("attributes")
-                if "'" in attributes:
-                    attributes = attributes.replace("'", '"')
                 try:
                     m_item["attributes"] = json.loads(attributes)
-                except json.JSONDecodeError as e:
-                    pass
+                except json.JSONDecodeError:
+                    m_item.pop("attributes")
+                    log.error("Cannot load json for menu item '%s'.", m_item["title"])
 
             sort_recursive(m_item.get("children", []))
 

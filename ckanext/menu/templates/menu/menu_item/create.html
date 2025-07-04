@@ -25,7 +25,17 @@
                             <form action="" method="post">
                                 {{ form.input("title", label=_("Title"), value=form_data.title, classes=["control-medium"], attrs={'class': 'form-control', 'required': 'true'}, is_required=True) }}
     
-                                {{ form.input("url", label=_("URL"), value=form_data.url, classes=["control-medium"], attrs={'class': 'form-control', 'required': 'true'}, is_required=True) }}
+                                {% call form.input("url", label=_("URL"), value=form_data.url, classes=[], attrs={'class': 'form-control', 'required': 'true'}, is_required=True) %}
+
+                                    {% set text = "Should be a valid URL. It can be either <strong>internal</strong> and start with leading slash or <strong>external</strong> URL to another portal. If you dont need it to be an link, specify an value '<strong>&lt;no_link&gt;</strong>', it will render an <strong>span</strong> element instead of link." %}
+                                    
+                                    {{- form.info(
+                                            text=text|safe,
+                                            inline=True,
+                                            classes=['mt-1']
+                                            ) -}}
+
+                                {% endcall %}
 
                                 {{ form.input("order", label=_("Position"), type="number", value=form_data.order, classes=["control-medium"], attrs={'min': '0', 'max': '100', 'step': '1', 'required': 'true'}, is_required=True) }}
 
@@ -38,7 +48,16 @@
                                 }}
 
                                 {{ form.input("classes", label=_("Classes"), placeholder="class1 class2", value=form_data.classes, classes=["control-medium"]) }}
-                                {{ form.input("attributes", label=_("Attributes"), placeholder="{'key': 'value'}", value=form_data.attributes, classes=["control-medium"]) }}
+
+                                {% call form.textarea("attributes", label=_("Attributes"), placeholder='{"key": "val"}', value=form_data.attributes, classes=[]) %}
+                                    {% set text = "This should store only valid <strong>json</strong>, where <strong>key</strong> is the name of the attribute and <strong>val</strong> its value." %}
+                                    {{- form.info(
+                                            text=text|safe,
+                                            inline=True,
+                                            classes=['mt-1']
+                                            ) -}}
+
+                                {% endcall %}
 
                                 {% block save %}
                                     <button class="btn btn-primary" type="submit">{{ _('Create') }}</button>

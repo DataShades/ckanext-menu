@@ -34,6 +34,7 @@ def menu_item_create(
     pid_menu_item_exist,
     menu_exist,
     menu_is_valid_url,
+    menu_valid_json,
 ) -> Schema:
     return {
         "title": [not_empty, unicode_safe],
@@ -41,7 +42,7 @@ def menu_item_create(
         "order": [default(0), int_validator],
         "pid": [ignore_empty, unicode_safe, pid_menu_item_exist],
         "classes": [ignore_empty, unicode_safe],
-        "attributes": [ignore_empty, unicode_safe],
+        "attributes": [ignore_empty, menu_valid_json],
         "mid": [not_empty, unicode_safe, menu_exist],
         "__extras": [ignore],
     }
@@ -77,6 +78,7 @@ def menu_item_edit(
     menu_exist,
     menu_item_exist,
     menu_is_valid_url,
+    menu_valid_json,
 ) -> Schema:
     return {
         "id": [not_empty, unicode_safe, menu_item_exist],
@@ -85,7 +87,7 @@ def menu_item_edit(
         "order": [default(0), int_validator],
         "pid": [ignore_empty, unicode_safe, pid_menu_item_exist],
         "classes": [ignore_empty, unicode_safe],
-        "attributes": [ignore_empty, unicode_safe],
+        "attributes": [ignore_empty, menu_valid_json],
         "mid": [not_empty, unicode_safe, menu_exist],
         "__extras": [ignore],
     }
