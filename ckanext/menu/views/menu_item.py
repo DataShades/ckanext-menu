@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from flask import Blueprint
 from flask.views import MethodView
-from sqlalchemy import or_
 
 
 import ckan.lib.navl.dictization_functions as dict_fns
@@ -180,9 +179,9 @@ class ListView(MethodView):
             return tk.abort(404, "Page not found")
 
         menu = CKANMenuModel.get_by_id(mid)
-        menu_items = CKANMenuItemModel.get_by_menu_id(mid)
+        menu_items = CKANMenuItemModel.get_by_menu_id(int(mid))
 
-        tree = m_utils.menu_build_ordered_tree(menu_items)
+        tree = m_utils.menu_build_ordered_tree(menu.name)
 
         extra_vars = {
             "menu_items": menu_items,

@@ -108,11 +108,31 @@ class CKANMenuItemModel(tk.BaseModel):
 
     @classmethod
     def get_by_url(cls, url: str) -> Self | None:
-        return model.Session.query(cls).filter(cls.url == url).first()
+        return (
+            model.Session.query(cls)
+            .filter(
+                sa.or_(
+                    cls.url == url,
+                    cls.url == url.rstrip("/"),
+                )
+            )
+            .first()
+        )
 
     @classmethod
-    def get_by_menu_id(cls, mid: str) -> list[Self]:
+    def get_by_menu_id(cls, mid: int) -> list[Self]:
         return model.Session.query(cls).filter(cls.mid == mid).all()
+
+    @classmethod
+    def get_top_level_by_menu_id(cls, mid: int) -> list[Self]:
+        items = (
+            model.Session.query(cls)
+            .filter(cls.mid == mid)
+            .filter(cls.pid.is_(None))
+            .order_by(cls.order)
+            .all()
+        )
+        return items
 
     @classmethod
     def get_menu_items_by_pid(cls, pid: str) -> list[Self]:

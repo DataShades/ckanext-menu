@@ -59,7 +59,55 @@ This will return and rendered menu tree strucure like this:
 </ul>
 ```
 
+### Custom template
+
 In `build_menu_tree` you also can specify an path to an custom snippet if you need to customize the output of the menu by providing second argument, which is an string path to the custom snippet. Example: `{{ h.build_menu_tree('MENU_NAME', 'menu/snippets/footer_menu.html') }}`. Where ` menu/snippets/footer_menu.html` is an Real path in the templates folder.
+
+### Specific levels
+
+In `build_menu_tree` helper, you can also specify what menu levels you expect to get.
+
+For example you got and menu like this, where you have 3 levels (levels counting from 0, which is the top level):
+```
+Home
+Dataset
+   Dataset 1
+   Dataset 2
+Organization
+   Org 1
+      Org 2
+```
+
+Now you want to some page to show this menu, but starting from second level (e.g. 1), you can do it like this:
+```
+{{ h.build_menu_tree('MENU_NAME', start=1) }}
+```
+
+This will return the menu:
+```
+Dataset 1
+Dataset 2
+Org 1
+   Org 2
+```
+
+Or for example, you want to have the Main navigation menu at the header to disaply only first level, but on other pages use it to render only second and third levels no matter how deep goes the menu structure:
+```
+Top level
+{{ h.build_menu_tree('MENU_NAME', start=0, end=0) }}
+
+Show from second level and limit by third level
+{{ h.build_menu_tree('MENU_NAME', start=1, end=2) }}
+```
+
+### Top level items
+
+While `build_menu_tree` can render the top level menu items by providing additioal params in helper, there is more suitable helper for such cases - `build_top_menu_tree`. It is much faster and solid comparing to `build_menu_tree`, as there less logic behind it.
+
+So places where only top level Menu items are needed, better use `build_top_menu_tree`.
+```
+{{ h.build_top_menu_tree('MENU_NAME') }}
+```
 
 ## Macros
 
