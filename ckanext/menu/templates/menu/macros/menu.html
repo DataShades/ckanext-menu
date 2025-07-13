@@ -49,6 +49,37 @@
 {% endmacro %}
 
 
+{% macro collapse_links(item, with_children=True) %}
+    {% set has_active_child = h.menu_has_active_descendant(item) if not item.active else False %}
+
+    <li class="{% if item.active %} active {% endif %}">
+        <div class="link-wrapper">
+            {% if not item.url == "<no_link>" %}
+                <a class="link-item {% if item.classes %}{{ item.classes }}{% endif %}" href="{{ item.url }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
+                    {{ item.title }}
+                </a>
+            {% else %}
+                <span class="link-item no-link {% if item.classes %}{{ item.classes }}{% endif %}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
+                    {{ item.title }}
+                </span>
+            {% endif %}
+            {% if with_children and item.children %}
+                <button class="btn btn-toggle collapse-trigger {% if not has_active_child %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-ul-{{ item.id }}" aria-expanded="{{ 'true' if has_active_child else 'false' }}">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            {% endif %}
+        </div>
+        {% if with_children and item.children %}
+            <ul class="list-unstyled collapse {% if has_active_child %}show{% endif %}" id="collapse-ul-{{ item.id }}">
+                {% for child in item.children %}
+                    {{ collapse_links(child) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+
 {% macro default_menu_tree(tree) %}
     <ul>
         {% for item in tree %}
@@ -84,6 +115,14 @@
     <ul class="list-unstyled">
         {% for item in tree %}
             {{ default_render_links(item) }}
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro menu_collapse_tree(tree) %}
+    <ul class="list-unstyled">
+        {% for item in tree %}
+            {{ collapse_links(item) }}
         {% endfor %}
     </ul>
 {% endmacro %}

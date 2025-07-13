@@ -35,3 +35,12 @@ def build_top_menu_tree(menu_name, snippet=None):
         )
 
     return Markup("")
+
+
+def menu_has_active_descendant(item):
+    if item.get("active"):
+        return True
+    for child in item.get("children", []):
+        if menu_has_active_descendant(child):
+            return True
+    return False
