@@ -1,0 +1,22 @@
+{% extends 'menu/menu_item/translations/create.html' %}
+
+{% block save %}
+    <a class="btn btn-secondary" href="{{ h.url_for('menu_item_translations.list', mid=mid, id=id) }}">{{ _('Cancel') }}</a>
+    <button class="btn btn-primary" type="submit">{{ _('Update') }}</button>
+{% endblock %}
+
+{% block title %}
+    {{ _("Update Menu Item Translation") }}
+{% endblock %}
+
+{% block breadcrumb_content %}
+    <li><a href="{{ h.url_for('menu_item_translations.edit', mid=mid, id=id, lang=lang) }}">{{ _("Update Menu Item Translation") }}</a></li>
+{% endblock %}
+
+{% block menu_actions %}
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-outline-primary me-2" href="{{ h.url_for('menu_item_translations.list', mid=mid, id=id) }}">
+            {{ _("Back") }}
+        </a>
+    </div>
+{% endblock %}

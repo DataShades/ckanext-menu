@@ -3,12 +3,12 @@
 {% macro default_render_links(item, with_children=True) %}
     <li class="{% if item.active %} active {% endif %}">
         {% if not item.url == "<no_link>" %}
-            <a class="{% if item.classes %}{{ item.classes }}{% endif %}" href="{{ item.url }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
-                {{ item.title }}
+            <a class="{% if item.classes %}{{ item.classes }}{% endif %}" href="{{ h.url_for(item.url) }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
+                {{ _(item.title) }}
             </a>
         {% else %}
             <span class="{% if item.classes %}{{ item.classes }}{% endif %}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
-                {{ item.title }}
+                {{ _(item.title) }}
             </span>
         {% endif %}
         {% if with_children and item.children %}
@@ -25,7 +25,7 @@
     {% if item.children %}
         <li class="dropdown {% if item.active %} active {% endif %}">
             <a class="{% if item.classes %}{{ item.classes }}{% endif %} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ item.title }}
+                {{ _(item.title) }}
             </a>
             <ul class="dropdown-menu">
                 {% for child in item.children %}
@@ -36,12 +36,12 @@
     {% else %}
         <li class="{% if item.active %} active {% endif %}">
             {% if not item.url == "<no_link>" %}
-                <a class="{% if item.classes %}{{ item.classes }}{% endif %}" href="{{ item.url }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
-                    {{ item.title }}
+                <a class="{% if item.classes %}{{ item.classes }}{% endif %}" href="{{ h.url_for(item.url) }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
+                    {{ _(item.title) }}
                 </a>
             {% else %}
                 <span class="{% if item.classes %}{{ item.classes }}{% endif %}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
-                    {{ item.title }}
+                    {{ _(item.title) }}
                 </span>
             {% endif %}
         </li>
@@ -55,12 +55,12 @@
     <li class="{% if item.active %} active {% endif %}">
         <div class="link-wrapper">
             {% if not item.url == "<no_link>" %}
-                <a class="link-item {% if item.classes %}{{ item.classes }}{% endif %}" href="{{ item.url }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
-                    {{ item.title }}
+                <a class="link-item {% if item.classes %}{{ item.classes }}{% endif %}" href="{{ h.url_for(item.url) }}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
+                    {{ _(item.title) }}
                 </a>
             {% else %}
                 <span class="link-item no-link {% if item.classes %}{{ item.classes }}{% endif %}" {% if item.attributes %} {{ attributes(item.attributes) }} {% endif %}>
-                    {{ item.title }}
+                    {{ _(item.title) }}
                 </span>
             {% endif %}
             {% if with_children and item.children %}

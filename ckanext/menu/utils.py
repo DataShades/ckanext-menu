@@ -88,6 +88,7 @@ def menu_build_ordered_tree(menu_name, start=0, end=None):
                             "Cannot load json for menu item '%s'.", m_item["title"]
                         )
 
+                m_item['title'] = tk.h.menu_item_translation(m_item)
                 sort_recursive(m_item.get("children", []))
 
         sort_recursive(tree)
@@ -100,5 +101,4 @@ def top_levels_links(menu_name):
     if menu:
         links = CKANMenuItemModel.get_top_level_by_menu_id(menu.id)
         links = [obj.dictize({}) for obj in links]
-        print(links)
         return links

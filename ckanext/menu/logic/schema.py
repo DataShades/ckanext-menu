@@ -49,6 +49,18 @@ def menu_item_create(
 
 
 @validator_args
+def menu_item_create_translation(
+    not_empty,
+    unicode_safe,
+) -> Schema:
+    return {
+        "id": [not_empty, unicode_safe],
+        "title": [not_empty, unicode_safe],
+        "lang": [not_empty, unicode_safe],
+    }
+
+
+@validator_args
 def menu_edit(
     not_empty,
     unicode_safe,

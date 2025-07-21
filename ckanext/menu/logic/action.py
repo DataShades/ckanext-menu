@@ -31,6 +31,25 @@ def menu_item_create(
     return menu_item.dictize(context)
 
 
+@validate(schema.menu_item_create_translation)
+def menu_item_create_translation(
+    context: types.Context, data_dict: types.DataDict
+) -> menu_types.MenuItem:
+    tk.check_access("menu_item_create", context, data_dict)
+
+    lang = data_dict.get("lang")
+    title = data_dict.get("title")
+    id = data_dict.get("id")
+
+    menu_item = CKANMenuItemModel.get_by_id(id)
+
+    menu_item.update_translation(lang, {
+        "title": title,
+    })
+
+    return menu_item.dictize(context)
+
+
 @tk.side_effect_free
 def menus_list(
     context: types.Context, data_dict: types.DataDict
@@ -99,6 +118,21 @@ def menu_item_delete(
             _delete_menu_item_children(child)
 
     return {"success": True}
+
+
+def menu_item_delete_translation(
+    context: types.Context, data_dict: types.DataDict
+) -> bool:
+    tk.check_access("menu_item_delete", context, data_dict)
+
+    lang = data_dict["lang"]
+
+    menu_item = CKANMenuItemModel.get_by_id(data_dict["id"])
+
+    if menu_item and menu_item.translations:
+        menu_item.delete_translation_key(lang)
+
+    return True
 
 
 def _delete_menu_item_children(child):

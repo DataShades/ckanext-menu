@@ -9,13 +9,12 @@ import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 from ckan.types import Context
 
-from ckanext.menu.model.menu import CKANMenuModel, CKANMenuItemModel
-import ckanext.menu.utils as m_utils
+from ckanext.menu.model.menu import CKANMenuItemModel
 
 
 ValidationError = logic.ValidationError
 
-menu_item = Blueprint("menu_item", __name__)
+menu_item_translations = Blueprint("menu_item_translations", __name__)
 
 
 def make_context() -> Context:
@@ -25,8 +24,8 @@ def make_context() -> Context:
     }
 
 
-class CreateView(MethodView):
-    def get(self, mid: int):
+class CreateTranslationView(MethodView):
+    def get(self, mid: int, id: int, lang: str):
         try:
             tk.check_access("menu_item_create", make_context(), {})
         except tk.NotAuthorized:
@@ -41,21 +40,26 @@ class CreateView(MethodView):
         except dict_fns.DataError:
             return tk.base.abort(400, tk._("Integrity Error"))
 
-        menu_items = CKANMenuItemModel.get_by_menu_id(mid)
+        menu_item = CKANMenuItemModel.get_by_id(id)
 
-        pid_options = [{"value": m.id, "text": m.title} for m in menu_items]
-        pid_options = [{"value": "", "text": "None"}, *pid_options]
+        if not menu_item:
+            return tk.abort(404, "Page not found")
+
+        form_data['title'] = form_data['title'] if form_data.get(
+            'title') else menu_item.title
 
         extra_vars = {
             "mid": mid,
-            "pid_options": pid_options,
+            "menu_item": menu_item,
             "form_data": form_data,
             "errors": {},
+            "id": id,
+            "lang": lang,
         }
 
-        return tk.render("menu/menu_item/create.html", extra_vars=extra_vars)
+        return tk.render("menu/menu_item/translations/create.html", extra_vars=extra_vars)
 
-    def post(self, mid: int):
+    def post(self, mid: int, id: int, lang: str):
         try:
             tk.check_access("menu_item_create", make_context(), {})
         except tk.NotAuthorized:
@@ -70,35 +74,25 @@ class CreateView(MethodView):
         except dict_fns.DataError:
             return tk.base.abort(400, tk._("Integrity Error"))
 
-        form_data["mid"] = mid
+        form_data["id"] = id
+        form_data["lang"] = lang
+
         try:
-            tk.get_action("menu_item_create")(make_context(), form_data)
+            tk.get_action("menu_item_create_translation")(
+                make_context(), form_data)
         except logic.ValidationError as e:
             tk.h.flash_error(e.error_summary)
 
-            menu_items = CKANMenuItemModel.get_by_menu_id(mid)
-
-            pid_options = [{"value": m.id, "text": m.title}
-                           for m in menu_items]
-            pid_options = [{"value": "", "text": "None"}, *pid_options]
-
-            extra_vars = {
-                "mid": mid,
-                "pid_options": pid_options,
-                "form_data": form_data,
-                "errors": {},
-            }
-
             return tk.render(
-                "menu/menu_item/create.html",
-                extra_vars=extra_vars,
+                "menu/menu_item/translations/create.html",
+                extra_vars=form_data,
             )
 
-        return tk.redirect_to("menu_item.list", mid=mid)
+        return tk.redirect_to("menu_item_translations.list", mid=mid, id=id)
 
 
-class EditView(MethodView):
-    def get(self, mid: int, id: int):
+class TranslationEditView(MethodView):
+    def get(self, mid: int, id: int, lang: str):
         menu_item = CKANMenuItemModel.get_by_id(id)
 
         try:
@@ -109,27 +103,27 @@ class EditView(MethodView):
         if not menu_item:
             return tk.abort(404, "Page not found")
 
-        form_data = menu_item.dictize({})
+        translations = menu_item.translations
 
-        menu_items = CKANMenuItemModel.get_by_menu_id(mid)
+        if not translations or not translations.get(lang):
+            return tk.abort(404, "Page not found")
 
-        pid_options = [{"value": m.id, "text": m.title} for m in menu_items]
-        pid_options = [{"value": "", "text": "None"}, *pid_options]
+        data = translations[lang]
 
         extra_vars = {
             "id": id,
             "mid": mid,
-            "pid_options": pid_options,
-            "form_data": form_data,
+            "form_data": data,
             "errors": {},
+            "lang": lang,
         }
 
         return tk.render(
-            "menu/menu_item/edit.html",
+            "menu/menu_item/translations/edit.html",
             extra_vars=extra_vars,
         )
 
-    def post(self, mid: int, id: int):
+    def post(self, mid: int, id: int, lang: str):
         try:
             tk.check_access("menu_item_edit", make_context(), {})
         except tk.NotAuthorized:
@@ -145,57 +139,49 @@ class EditView(MethodView):
             return tk.base.abort(400, tk._("Integrity Error"))
 
         form_data["id"] = id
-        form_data["mid"] = mid
-
-        menu_items = CKANMenuItemModel.get_by_menu_id(mid)
-
-        pid_options = [{"value": m.id, "text": m.title} for m in menu_items]
-        pid_options = [{"value": "", "text": "None"}, *pid_options]
+        form_data["lang"] = lang
 
         try:
-            tk.get_action("menu_item_edit")(make_context(), form_data)
+            tk.get_action("menu_item_create_translation")(
+                make_context(), form_data)
         except logic.ValidationError as e:
             tk.h.flash_error(e.error_summary)
             extra_vars = {
                 "id": id,
                 "mid": mid,
-                "pid_options": pid_options,
                 "form_data": form_data,
                 "errors": {},
+                "lang": lang,
             }
 
             return tk.render(
-                "menu/menu_item/edit.html",
+                "menu/menu_item/translations/edit.html",
                 extra_vars=extra_vars,
             )
 
-        return tk.redirect_to("menu_item.list", mid=mid)
+        return tk.redirect_to("menu_item_translations.list", mid=mid, id=id)
 
 
-class ListView(MethodView):
-    def get(self, mid: int):
+class TranslationsView(MethodView):
+    def get(self, mid: int, id: int):
         try:
             tk.check_access("menu_item_create", make_context(), {})
         except tk.NotAuthorized:
             return tk.abort(404, "Page not found")
 
-        menu = CKANMenuModel.get_by_id(mid)
-        menu_items = CKANMenuItemModel.get_by_menu_id(mid)
-
-        tree = m_utils.menu_build_ordered_tree(menu.name)
+        menu_item = CKANMenuItemModel.get_by_id(id)
 
         extra_vars = {
-            "menu_items": menu_items,
-            "menu": menu,
-            "tree": tree,
+            "menu_item": menu_item,
             "mid": mid,
+            "id": id,
         }
 
-        return tk.render("menu/menu_item/list.html", extra_vars=extra_vars)
+        return tk.render("menu/menu_item/translations/list.html", extra_vars=extra_vars)
 
 
-class DeleteView(MethodView):
-    def get(self, mid: str, id: str):
+class TranslationDeleteView(MethodView):
+    def get(self, mid: int, id: int, lang: str):
         menu_item = CKANMenuItemModel.get_by_id(id)
 
         try:
@@ -209,42 +195,53 @@ class DeleteView(MethodView):
         form_data = menu_item.dictize({})
 
         return tk.render(
-            "menu/menu_item/delete.html",
+            "menu/menu_item/translations/delete.html",
             extra_vars={
                 "id": id,
                 "form_data": form_data,
                 "errors": {},
                 "mid": mid,
+                "lang": lang
             },
         )
 
-    def post(self, mid: str, id: str):
+    def post(self, mid: int, id: int, lang: str):
         try:
             tk.check_access("menu_item_delete", make_context(), {})
         except tk.NotAuthorized:
             return tk.abort(404, "Page not found")
 
-        form_data = {"id": id}
+        form_data = {"id": id, "lang": lang}
+
+        extra_vars = {
+            "id": id,
+            "form_data": form_data,
+            "errors": {},
+            "mid": mid,
+            "lang": lang
+        },
 
         try:
-            tk.get_action("menu_item_delete")(make_context(), form_data)
+            tk.get_action("menu_item_delete_translation")(
+                make_context(), form_data)
         except logic.ValidationError as e:
             tk.h.flash_error(e.error_summary)
             return tk.render(
-                "menu/menu_item/delete.html",
-                extra_vars={"form_data": form_data, "errors": {}},
+                "menu/menu_item/translations/delete.html",
+                extra_vars=extra_vars,
             )
 
-        return tk.redirect_to("menu_item.list", mid=mid)
+        return tk.redirect_to("menu_item_translations.list", mid=mid, id=id)
 
 
-menu_item.add_url_rule(
-    "/menu/<mid>/menu-item/create", view_func=CreateView.as_view("create")
+menu_item_translations.add_url_rule(
+    "/menu/<mid>/menu-item/<id>/translation/<lang>/create", view_func=CreateTranslationView.as_view("create")
 )
-menu_item.add_url_rule(
-    "/menu/<mid>/menu-item/<id>/edit", view_func=EditView.as_view("edit")
+menu_item_translations.add_url_rule(
+    "/menu/<mid>/menu-item/<id>/translation/<lang>/edit", view_func=TranslationEditView.as_view("edit")
 )
-menu_item.add_url_rule(
-    "/menu/<mid>/menu-item/<id>/delete", view_func=DeleteView.as_view("delete")
+menu_item_translations.add_url_rule(
+    "/menu/<mid>/menu-item/<id>/translation/<lang>/delete", view_func=TranslationDeleteView.as_view("delete")
 )
-menu_item.add_url_rule("/menu/<mid>/list", view_func=ListView.as_view("list"))
+menu_item_translations.add_url_rule(
+    "/menu/<mid>/menu-item/<id>/translations", view_func=TranslationsView.as_view("list"))

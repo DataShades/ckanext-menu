@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import TypedDict, Any
 
 
 class MenuItem(TypedDict):
@@ -12,6 +12,7 @@ class MenuItem(TypedDict):
     classes: str | None
     attributes: str | None
     mid: str
+    translations: dict[str, Any]
 
 
 class Menu(TypedDict):

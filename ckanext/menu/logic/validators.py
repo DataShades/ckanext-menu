@@ -149,11 +149,9 @@ def menu_valid_json(
     context: types.Context,
 ) -> Any:
     val = data.get(key)
-    print(val)
     if val:
         try:
             json.loads(val)
         except json.JSONDecodeError:
-            print(2)
             errors[key].append("Not a valid JSON.")
     return

@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-    {{ super() }}
     <li><a href="{{ h.url_for('menu_item.edit', id=id, mid=mid) }}">{{ _("Update Menu Item") }}</a></li>
 {% endblock %}
 
@@ -18,6 +17,9 @@
     <div class="d-flex justify-content-end">
         <a class="btn btn-outline-primary me-2" href="{{ h.url_for('menu_item.list', mid=mid) }}">
             {{ _("Back") }}
+        </a>
+        <a class="btn btn-secondary me-2" href="{{ h.url_for('menu_item_translations.list', mid=mid, id=id) }}">
+            {{ _("Translations") }}
         </a>
         <a class="btn btn-danger" href="{{ h.url_for('menu.delete', id=id) }}">
             {{ _("Delete") }}

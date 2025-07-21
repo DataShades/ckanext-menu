@@ -3,12 +3,11 @@
 {% import 'macros/form.html' as form %}
 
 {% block title %}
-    {{ _("Delete Menu Item") }}
+    {{ _("Delete Translation") }}
 {% endblock %}
 
 {% block breadcrumb_content %}
-    {{ super() }}
-    <li><a href="{{ h.url_for('menu_item.delete', mid=mid, id=id) }}">{{ _("Delete Menu Item") }}</a></li>
+    <li><a href="{{ h.url_for('menu_item_translations.delete', mid=mid, id=id, lang=lang) }}">{{ _("Delete Translation") }}</a></li>
 {% endblock %}
 
 {%- block content %}
@@ -19,16 +18,25 @@
                 {% block toolbar %}{{ super() }}{% endblock %}
                 <div class="menu-wrapper">
                     {% block primary %}
+                        {% set locals = h.get_locales_dict() %}
                         <div class="module-content">
                             <form action="" method="post">
                                 <h2 class="mb-4">
-                                    {{ _('Delete') }} "{{ form_data.title }}"?
+                                    {{ _('Delete') }}
+
+                                    "{% if lang in locals %}
+                                        {{ locals[lang].display_name or locals[lang].english_name }}
+                                    {% else %}
+                                        {{ lang }}
+                                    {% endif %}"
+                                    
+                                    {{ _('translation') }}?
                                 </h2>
                                 <input type="hidden" name="id" value="{{ id }}">
                                 <p>
-                                    {{ _('Are you sure you want to delete this Menu Item?') }}
+                                    {{ _('Are you sure you want to delete this translation?') }}
                                 </p>
-                                <a class="btn btn-secondary me-2" href="{{ h.url_for('menu_item.list', mid=mid) }}">{{ _('Cancel') }}</a>
+                                <a class="btn btn-secondary me-2" href="{{ h.url_for('menu_item_translations.list', mid=mid, id=id) }}">{{ _('Cancel') }}</a>
                                 <button class="btn btn-danger btn-delete" type="submit">{{ _('Delete') }}</button>
                             </form>
                         </div>

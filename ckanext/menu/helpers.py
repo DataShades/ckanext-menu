@@ -44,3 +44,22 @@ def menu_has_active_descendant(item):
         if menu_has_active_descendant(child):
             return True
     return False
+
+
+def menu_item_translation(menu_item, field='title'):
+    if isinstance(menu_item, dict):
+        translations = menu_item.get("translations")
+    else:
+        menu_item = menu_item.dictize({})
+        translations = menu_item.translations
+
+    text = menu_item.get(field, "")
+
+    if translations:
+        lang = tk.h.lang()
+        if lang in translations:
+            data = translations[lang]
+            if field in data and data[field]:
+                text = data[field]
+
+    return text

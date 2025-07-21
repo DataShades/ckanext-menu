@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import relationship
 from typing_extensions import Self
 from typing import Any
@@ -80,6 +82,7 @@ class CKANMenuItemModel(tk.BaseModel):
     classes = sa.Column(sa.String, nullable=True)
     attributes = sa.Column(sa.String, nullable=True)
     mid = sa.Column(sa.Integer, sa.ForeignKey("menu.id"), nullable=False)
+    translations = sa.Column(MutableDict.as_mutable(JSONB))
 
     menu = relationship("CKANMenuModel", back_populates="items")
 
@@ -103,7 +106,7 @@ class CKANMenuItemModel(tk.BaseModel):
         model.Session.commit()
 
     @classmethod
-    def get_by_id(cls, menu_item_id: str) -> Self | None:
+    def get_by_id(cls, menu_item_id: int) -> Self | None:
         return model.Session.query(cls).filter(cls.id == menu_item_id).first()
 
     @classmethod
@@ -148,4 +151,17 @@ class CKANMenuItemModel(tk.BaseModel):
             classes=str(self.classes) if self.classes else None,
             attributes=str(self.attributes) if self.attributes else None,
             mid=str(self.mid),
+            translations=self.translations,  # type: ignore
         )
+
+    def update_translation(self, lang: str, data: dict[str, Any]) -> None:
+        if not self.translations:
+            self.translations = MutableDict()
+
+        self.translations[lang] = data
+        model.Session.commit()
+
+    def delete_translation_key(self, lang: str):
+        if self.translations and lang in self.translations:
+            del self.translations[lang]
+            model.Session.commit()
